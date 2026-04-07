@@ -1,0 +1,44 @@
+groups:
+  - name: security_alerts
+    rules:
+
+      - alert: BruteForceDetected
+        expr: |
+          increase(flask_security_failed_logins_total[5m]) > 50
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Brute-force attack detected"
+          description: "More than 50 failed logins in 5 minutes."
+
+      - alert: AccountLockoutSpike
+        expr: |
+          increase(flask_security_locked_accounts_total[10m]) > 5
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Multiple accounts being locked out"
+          description: "5+ accounts locked in 10 minutes — possible credential stuffing."
+
+      - alert: SuspiciousIPActivity
+        expr: |
+          increase(flask_security_suspicious_ip_hits_total[5m]) > 20
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Known suspicious IP is active"
+          description: "A flagged IP has made 20+ requests in 5 minutes."
+
+      - alert: HighErrorRate
+        expr: |
+          rate(flask_security_http_requests_total{status_code="401"}[5m])
+          /
+          rate(flask_security_http_requests_total[5m]) > 0.6
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Over 60% of requests are returning 401"
