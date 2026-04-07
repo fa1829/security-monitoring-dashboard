@@ -139,4 +139,4 @@ security-monitoring-dashboard/
 
 ## Author
 
-Faisal Khandoker — Information Systems Security, Concordia University
+Khandoker Faisal — Information Systems Security, Concordia University
